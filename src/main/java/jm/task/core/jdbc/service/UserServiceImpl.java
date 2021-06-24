@@ -1,99 +1,34 @@
 package jm.task.core.jdbc.service;
 
+import jm.task.core.jdbc.dao.UserDao;
+import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
-import jm.task.core.jdbc.util.Util;
-
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    Connection connection = Util.getConnection();
+    private final UserDao userDao = new UserDaoJDBCImpl();
 
     public void createUsersTable() {
-        try {
-            Statement statement = connection.createStatement();
-            String sqlCreate = "CREATE TABLE IF NOT EXISTS Users " +
-                    "(id MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
-                    "name text NOT NULL, " +
-                    "lastName text NOT NULL, " +
-                    "age int not null)";
-            statement.executeUpdate(sqlCreate);
-            statement.close();
-        } catch (SQLException throwables) {
-            System.out.println("Ошибка при создании таблицы");
-            throwables.printStackTrace();
-        }
+        userDao.createUsersTable();
     }
 
     public void dropUsersTable() {
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("DROP TABLE IF EXISTS Users");
-            statement.close();
-            System.out.println("Таблицы удалена");
-        } catch (SQLException throwables) {
-            System.out.println("Ошибка при удалении таблицы");
-            throwables.printStackTrace();
-        }
+        userDao.dropUsersTable();
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        String sqlSave = "INSERT INTO Users (name, lastName, age) values (?, ?, ?)";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sqlSave);
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, lastName);
-            preparedStatement.setByte(3, age);
-            preparedStatement.executeUpdate();
-            System.out.println("User с именем - " + name + " добавлен в базу данных");
-        } catch (SQLException throwables) {
-            System.out.println("Ошибка при добавлении данных в таблицу");
-            throwables.printStackTrace();
-        }
+        userDao.saveUser(name, lastName, age);
     }
 
     public void removeUserById(long id) {
-        String sqlRemoveById = "DELETE FROM Users WHERE id = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sqlRemoveById);
-            preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            System.out.println("Ошибка при добавлении данных в таблицу");
-            throwables.printStackTrace();
-        }
+        userDao.removeUserById(id);
     }
 
     public List<User> getAllUsers() {
-        List<User> listUsers = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users")) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getLong("id"));
-                user.setName(resultSet.getString("name"));
-                user.setLastName(resultSet.getString("lastName"));
-                user.setAge(resultSet.getByte("age"));
-                listUsers.add(user);
-                System.out.println(user.toString());
-            }
-        } catch (SQLException e) {
-            System.out.println("При попытке достать всех пользователей из базы данных произошло исключение");
-            e.printStackTrace();
-        }
-        return listUsers;
+        return userDao.getAllUsers();
     }
 
     public void cleanUsersTable() {
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("TRUNCATE TABLE Users");
-            statement.close();
-            System.out.println("Данные из таблицы были удалены");
-        } catch (SQLException throwables) {
-            System.out.println("Ошибка при уданелении данных из таблицы");
-            throwables.printStackTrace();
-        }
+        userDao.cleanUsersTable();
     }
 }
