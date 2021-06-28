@@ -31,7 +31,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public void dropUsersTable() {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DROP TABLE IF EXISTS Users");
-            System.out.println("Таблицы удалена");
+            System.out.println("Таблица удалена");
         } catch (SQLException throwables) {
             System.out.println("Ошибка при удалении таблицы");
             throwables.printStackTrace();
@@ -58,7 +58,7 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
-            System.out.println("Ошибка при добавлении данных в таблицу");
+            System.out.println("Ошибка при удалении User по id");
             throwables.printStackTrace();
         }
     }
