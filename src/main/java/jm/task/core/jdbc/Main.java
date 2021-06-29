@@ -1,29 +1,32 @@
 package jm.task.core.jdbc;
 
+
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.service.UserService;
 import jm.task.core.jdbc.service.UserServiceImpl;
-import jm.task.core.jdbc.util.Util;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        SessionFactory session = Util.getSessionFactory();
-        //      UserService userService = new UserServiceImpl();
 
-   //     userService.createUsersTable();
-//
-//        userService.saveUser("Anton", "Ivanov", (byte) 23);
-//        userService.saveUser("Anna", "Sergeeva", (byte) 28);
-//        userService.saveUser("Sergey", "Petrov", (byte) 35);
-//        userService.saveUser("Marina", "Medvedeva", (byte) 39);
+        UserService userService = new UserServiceImpl();
 
- //       userService.getAllUsers();
+        userService.createUsersTable();
 
- //       userService.cleanUsersTable();
+        userService.saveUser("Anton", "Ivanov", (byte) 23);
+        userService.saveUser("Anna", "Sergeeva", (byte) 28);
+        userService.saveUser("Sergey", "Petrov", (byte) 35);
+        userService.saveUser("Marina", "Medvedeva", (byte) 39);
 
-  //      userService.dropUsersTable();
+        List<User> allUsers = userService.getAllUsers();
+        for (User user: allUsers) {
+            System.out.println(user.toString());
+       }
+
+        userService.cleanUsersTable();
+
+        userService.dropUsersTable();
 
     }
 }
