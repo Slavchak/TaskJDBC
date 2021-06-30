@@ -7,7 +7,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
@@ -46,7 +45,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try {
             session = Util.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.createSQLQuery("DROP TABLE Users");
+            session.createSQLQuery("DROP TABLE IF EXISTS Users");
             tx.commit();
             System.out.println("Таблица удалена");
         } catch (HibernateException e) {
@@ -105,14 +104,8 @@ public class UserDaoHibernateImpl implements UserDao {
         List<User> listUser = new ArrayList<>();
         try {
             session = Util.getSessionFactory().openSession();
-  //          listUser =(List<User>) session.createQuery("FROM Users").list();
-      //      tx = session.beginTransaction();
             listUser = session.createCriteria(User.class).list();
-   //         tx.commit();
         } catch (HibernateException e) {
-            if (tx != null) {
-                tx.rollback();
-            }
             System.out.println("При попытке достать всех пользователей из базы данных произошло исключение");
             e.printStackTrace();
         } finally {
