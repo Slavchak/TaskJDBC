@@ -45,7 +45,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try {
             session = Util.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.createSQLQuery("DROP TABLE IF EXISTS Users");
+            session.createSQLQuery("DROP TABLE iF EXISTS Users");
             tx.commit();
             System.out.println("Таблица удалена");
         } catch (HibernateException e) {
@@ -65,7 +65,7 @@ public class UserDaoHibernateImpl implements UserDao {
             session = Util.getSessionFactory().openSession();
             tx = session.beginTransaction();
             User user = new User(name, lastName, age);
-            session.saveOrUpdate(user);
+            session.save(user);
             session.flush();
             tx.commit();
             System.out.println("User с именем - " + name + " добавлен в базу данных");
